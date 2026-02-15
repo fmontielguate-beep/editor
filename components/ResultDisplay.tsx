@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { EditorAnalysis, TableData, StyleSuggestion, TableIdea } from '../types';
+import type { EditorAnalysis } from '../types';
 
 interface ResultDisplayProps {
   analysis: EditorAnalysis;
