@@ -31,11 +31,11 @@ RESPUESTA JSON:
 `;
 
 export const analyzeCaseReport = async (text: string): Promise<EditorAnalysis> => {
-  // En Vite, process.env.API_KEY se define en vite.config.ts
+  // En Vite + Netlify, la clave se inyecta vía define en vite.config.ts
   const apiKey = process.env.API_KEY;
   
-  if (!apiKey || apiKey === 'undefined') {
-    throw new Error("API_KEY no detectada. Por favor, configúrala en el panel de Netlify (Environment Variables).");
+  if (!apiKey || apiKey === 'undefined' || apiKey === '') {
+    throw new Error("ERROR DE CONFIGURACIÓN: No se detectó la API_KEY. Asegúrate de haberla añadido en Netlify > Site Settings > Environment Variables y haber relanzado el Deploy con 'Clear cache'.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
@@ -97,7 +97,7 @@ export const analyzeCaseReport = async (text: string): Promise<EditorAnalysis> =
   });
 
   const resultStr = response.text;
-  if (!resultStr) throw new Error("No response from AI");
+  if (!resultStr) throw new Error("La IA no devolvió una respuesta válida.");
   
   return JSON.parse(resultStr) as EditorAnalysis;
 };
