@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { EditorAnalysis } from "../types";
 
@@ -34,10 +33,9 @@ export const analyzeCaseReport = async (text: string): Promise<EditorAnalysis> =
   const apiKey = process.env.API_KEY;
   
   if (!apiKey || apiKey === 'undefined' || apiKey === '') {
-    throw new Error("API_KEY_MISSING: No se detectó la clave de API. Por favor, asegúrate de añadirla en el panel de Netlify (Site Configuration > Environment Variables) con el nombre API_KEY.");
+    throw new Error("ERROR DE CONFIGURACIÓN: No se detectó la API_KEY. Asegúrate de haberla añadido en Netlify > Site Settings > Environment Variables y haber relanzado el Deploy con 'Clear cache'.");
   }
 
-  // Inicializar el cliente justo antes de usarlo
   const ai = new GoogleGenAI({ apiKey });
   
   const response = await ai.models.generateContent({
@@ -97,12 +95,11 @@ export const analyzeCaseReport = async (text: string): Promise<EditorAnalysis> =
   });
 
   const resultStr = response.text;
-  if (!resultStr) throw new Error("La IA no devolvió una respuesta válida.");
+  if (!resultStr) throw new Error("La IA no devolvió resultados.");
   
   try {
     return JSON.parse(resultStr) as EditorAnalysis;
   } catch (e) {
-    console.error("Error parsing JSON response:", resultStr);
-    throw new Error("El formato de respuesta de la IA es inválido.");
+    throw new Error("Error al procesar la respuesta médica. El texto enviado podría ser demasiado complejo o estar mal estructurado.");
   }
 };
