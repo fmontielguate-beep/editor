@@ -31,7 +31,14 @@ RESPUESTA JSON:
 `;
 
 export const analyzeCaseReport = async (text: string): Promise<EditorAnalysis> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+  // En Vite, process.env.API_KEY se define en vite.config.ts
+  const apiKey = process.env.API_KEY;
+  
+  if (!apiKey || apiKey === 'undefined') {
+    throw new Error("API_KEY no detectada. Por favor, configúrala en el panel de Netlify (Environment Variables).");
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
   
   const response = await ai.models.generateContent({
     model: 'gemini-3-pro-preview',
