@@ -1,0 +1,5 @@
+{
+  "name": "Pediatric Case Report Editor Pro",
+  "description": "A high-end editor application for pediatric medical case reports, providing critical evaluation, CARE guideline compliance, and professional text optimization using Gemini Pro.",
+  "requestFramePermissions": []
+}
