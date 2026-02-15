@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { EditorAnalysis } from "../types";
 
@@ -33,13 +34,14 @@ export const analyzeCaseReport = async (text: string): Promise<EditorAnalysis> =
   const apiKey = process.env.API_KEY;
   
   if (!apiKey || apiKey === 'undefined' || apiKey === '') {
-    throw new Error("ERROR DE CONFIGURACIÓN: No se detectó la API_KEY. Asegúrate de haberla añadido en Netlify > Site Settings > Environment Variables y haber relanzado el Deploy con 'Clear cache'.");
+    throw new Error("ERROR DE CONFIGURACIÓN: No se detectó la API_KEY. Asegúrate de haberla añadido en Netlify > Site Settings > Environment Variables.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
   
+  // Cambiamos a gemini-3-flash-preview para mayor disponibilidad y evitar errores 429
   const response = await ai.models.generateContent({
-    model: 'gemini-3-pro-preview',
+    model: 'gemini-3-flash-preview',
     contents: text,
     config: {
       systemInstruction: SYSTEM_INSTRUCTION,
@@ -100,6 +102,6 @@ export const analyzeCaseReport = async (text: string): Promise<EditorAnalysis> =
   try {
     return JSON.parse(resultStr) as EditorAnalysis;
   } catch (e) {
-    throw new Error("Error al procesar la respuesta médica. El texto enviado podría ser demasiado complejo o estar mal estructurado.");
+    throw new Error("Error al procesar la respuesta médica. El servidor de Google está saturado o el texto es incompatible.");
   }
 };
